@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>IP‑Location Tracker → Video</title>
+  <style>
+    body {font-family:Arial,Helvetica,sans-serif; margin:2rem;}
+    #info {margin-top:1rem;}
+  </style>
+</head>
+<body>
+  <h1>Your IP‑based location</h1>
+  <div id="info">Loading…</div>
+  <script>
+    const redirectUrl = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'; // replace with your target video
+    fetch('https://ip-api.com/json/')
+      .then(r => r.json())
+      .then(data => {
+        if (data.status === 'success') {
+          const { query, country, regionName, city, zip, lat, lon, isp } = data;
+          document.getElementById('info').innerHTML = `
+            <strong>IP:</strong> ${query}<br/>
+            <strong>Location:</strong> ${city}, ${regionName}, ${country} ${zip}<br/>
+            <strong>Coordinates:</strong> ${lat.toFixed(3)}, ${lon.toFixed(3)}<br/>
+            <strong>ISP:</strong> ${isp}<br/>
+          `;
+        } else {
+          document.getElementById('info').textContent = 'Unable to determine location.';
+        }
+        setTimeout(() => { window.location.href = redirectUrl; }, 3000);
+      })
+      .catch(() => {
+        document.getElementById('info').textContent = 'Error contacting geolocation service.';
+        setTimeout(() => { window.location.href = redirectUrl; }, 3000);
+      });
+  </script>
+</body>
+</html>
